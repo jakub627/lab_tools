@@ -1,5 +1,4 @@
 import pytest
-import numpy as np
 from lab_tools.checking import check_if_equal_extended_unc
 
 
