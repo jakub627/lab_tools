@@ -1,15 +1,22 @@
-# Wirtualne środowisko
+# Virtual environment
 venv/
 env/
 
-# Pliki kompilacji
+# Compilation files
 *.pyc
 *.pyo
+__pycache__/
 
-# Pliki konfiguracji IDE
+# IDE configuration files
 .idea/
 .vscode/
 
-# Pliki systemowe
+# System files
 .DS_Store
 Thumbs.db
+
+# Build and package files
+build/
+dist/
+*.egg-info/
+*.pytest_cache/
