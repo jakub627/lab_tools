@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="lab_tools",
-    version="0.1.8",
+    version="0.1.10",
     packages=find_packages(),
     install_requires=[
         "numpy>=1.18.5",
