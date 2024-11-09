@@ -1,7 +1,7 @@
 from numpy.typing import ArrayLike
 import numpy as np
 from scipy import stats
-from typing import Optional, Tuple
+from typing import Iterator, Optional, Tuple
 
 
 class LinearRegression:
@@ -87,3 +87,11 @@ class LinearRegression:
             f"stderr={self.stderr:.4f}, intercept_stderr={self.intercept_stderr:.4f}, "
             f"rvalue={self.rvalue:.4f})"
         )
+
+    def __iter__(self) -> Iterator[float]:
+        """Allows iteration over key attributes of the LinearRegression instance."""
+        yield self.slope
+        yield self.intercept
+        yield self.stderr
+        yield self.intercept_stderr
+        yield self.rvalue

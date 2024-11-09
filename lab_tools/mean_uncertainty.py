@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Iterator
 import numpy as np
 from numpy.typing import ArrayLike
 
@@ -29,4 +29,9 @@ class MeanUncertainty:
     def __str__(self) -> str:
         """Returns a string representation of the MeanUncertainty object."""
         return f"MeanUncertainty(mean={self.mean}, stderr={self.stderr})"
+    
+    def __iter__(self) -> Iterator[float]:
+        """Allows iteration over the MeanUncertainty instance, yielding mean and stderr."""
+        yield self.mean
+        yield self.stderr
 
