@@ -153,3 +153,91 @@ def round_to_2(
             x = round_non_zero_elements(x, round_index(u_x))
 
     return x
+
+
+def rounded_string(
+    x: float,
+    u_x: float = 0,
+    s_x: str = "x",
+    unit_x: str = "",
+    scale_x: int = 0,
+    scale_u_x: None | int = None,
+    t: bool | int = False,
+    n: bool | int = False,
+) -> str:
+    """
+    Prints a value along with its uncertainty, rounded to two significant digits and their units.
+    The decimal points of the values are aligned.
+
+    :param float x: Measured value to be printed.
+    :param float u_x: Uncertainty of the measured value, defaults to 0.
+    :param str s_x: Name of the measured value, defaults to "x".
+    :param str unit_x: Unit of the measured value, defaults to "".
+    :param int scale_x: Scale - the power of 10 by which the measured value will be multiplied, defaults to 0.
+    :param None | int scale_u_x: Scale - the power of 10 by which the uncertainty will be multiplied, defaults to None.
+    :param bool | int n: Inserts a new line before printing, defaults to False.
+    :param bool | int t: Inserts a tabulation before printing, defaults to False.
+    :raises ValueError: If the exponent is not a valid SI exponent.
+    :return str: The formatted string with the measured value and its uncertainty.
+    """
+
+    def exponent_to_prefix(exponent: int) -> str:
+        prefix_map = {
+            -24: "y",  # yocto
+            -21: "z",  # zepto
+            -18: "a",  # atto
+            -15: "f",  # femto
+            -12: "p",  # pico
+            -9: "n",  # nano
+            -6: "u",  # micro
+            -3: "m",  # milli
+            -2: "c",  # centi
+            -1: "d",  # deci
+            0: "",  # no prefix
+            1: "da",  # deca
+            2: "h",  # hecto
+            3: "k",  # kilo
+            6: "M",  # mega
+            9: "G",  # giga
+            12: "T",  # tera
+            15: "P",  # peta
+            18: "E",  # exa
+            21: "Z",  # zetta
+            24: "Y",  # yotta
+        }
+        if exponent in prefix_map:
+            return prefix_map[exponent]
+        else:
+            raise ValueError(f"Exponent '{exponent}' is not a valid SI exponent.")
+
+    scale_u_x = scale_x if not scale_u_x else scale_u_x
+    s_u_x = None if not u_x else "u_" + s_x
+
+    x_rounded = round_to_2(x * 10**-scale_x, u_x * 10**-scale_x)
+    u_x_rounded = round_to_2(u_x * 10**-scale_u_x)
+
+    x_rounded_str = f"{x_rounded:f}".rstrip("0").rstrip(".")
+    u_x_rounded_str = f"{u_x_rounded:f}".rstrip("0").rstrip(".")
+
+    if scale_x == scale_u_x:
+        rounding_index = len(x_rounded_str.split(".")[1]) if "." in x_rounded_str else 0
+        x_rounded_str = f"{x_rounded:.{rounding_index}f}"
+        u_x_rounded_str = f"{u_x_rounded:.{rounding_index}f}"
+
+    max_val_len = max(len(str(int(x_rounded))), len(str(int(x_rounded)))) + len(u_x_rounded_str) - 1 if scale_x == scale_u_x and u_x else 0  # type: ignore
+    max_str_len = len(s_u_x) if s_u_x else 0
+
+    newline = "\n" if n else ""
+    tab = "\t" if t else ""
+
+    prefix_x = exponent_to_prefix(scale_x)
+    prefix_u_x = exponent_to_prefix(scale_u_x)
+
+    x_str = f"{newline}{tab}{s_x:>{max_str_len}} = {x_rounded_str:>{max_val_len}}{f' [{prefix_x}{unit_x}]' if unit_x else ''}"
+    u_x_str = (
+        f"\n{tab}{s_u_x:>{max_str_len}} = {u_x_rounded_str:>{max_val_len}}{f' [{prefix_u_x}{unit_x}]' if unit_x else ''}"
+        if u_x
+        else ""
+    )
+
+    return x_str + u_x_str
