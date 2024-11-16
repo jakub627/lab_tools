@@ -23,7 +23,7 @@ def check_if_equal_extended_unc(
 
     is_equal = False
     k: int = 1
-    while not is_equal:
+    while not is_equal or k <= 10:
         k += 1
         U_diff: float = k * np.sqrt(u_x1**2 + u_x2**2)
         diff: float = np.abs(x1 - x2)
