@@ -21,15 +21,16 @@ def check_if_equal_extended_unc(
         if not isinstance(var, (int, float)):
             raise TypeError(f"{name} must be float or int, but got {type(var)}")
 
-    is_equal = False
     k: int = 1
-    while not is_equal or k <= 10:
+    eq_str = "Not equal"
+    while k <= 10:
         k += 1
         U_diff: float = k * np.sqrt(u_x1**2 + u_x2**2)
         diff: float = np.abs(x1 - x2)
         if diff <= U_diff:
-            is_equal = True
+            eq_str = "Equal"
+            break
 
-    print(
-        f"Equal within the extended uncertainty bounds ({'only for ' if k > 2 else ''}k = {k})."
-    )
+    k_val_str = f" ({'only for ' if k > 2 else ''}k = {k})" if eq_str == "Equal" else ""
+
+    print(f"{eq_str} within the extended uncertainty bounds{k_val_str}.")
