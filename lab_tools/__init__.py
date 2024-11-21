@@ -7,6 +7,7 @@ from .rounding import *
 __all__ = [
     "LinearRegression",
     "MeanUncertainty",
+    "FitCurve",
     "checking",
     "plotting",
     "rounding"
