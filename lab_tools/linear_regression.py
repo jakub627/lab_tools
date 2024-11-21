@@ -59,7 +59,7 @@ class LinearRegression:
         self.y: np.ndarray = self.slope * self.x + self.intercept
         return self
 
-    def predict(self, x: ArrayLike) -> np.ndarray:
+    def predict_y(self, x: ArrayLike) -> np.ndarray:
         """Predicts the Y value for a given X using the fitted linear regression model.
 
         Args:
@@ -75,6 +75,23 @@ class LinearRegression:
         if self.slope == 0.0 and self.intercept == 0.0:
             raise ValueError("Model has not been fitted yet.")
         return self.slope * x + self.intercept
+
+    def predict_x(self, y: ArrayLike) -> np.ndarray:
+        """Predicts the X value for a given Y using the fitted linear regression model.
+
+        Args:
+            y (ArrayLike): The y value(s) for which to predict the corresponding x value(s).
+
+        Raises:
+            ValueError: If the model has not been fitted yet (slope or intercept is 0.0).
+
+        Returns:
+            np.ndarray: The predicted x value(s) for the given y.
+        """
+        y = np.asarray(y)  # Convert input to np.ndarray to ensure consistency
+        if self.slope == 0.0 and self.intercept == 0.0:
+            raise ValueError("Model has not been fitted yet.")
+        return  (y - self.intercept)/self.slope
 
     def __str__(self) -> str:
         """Returns a string representation of the fitted linear regression model.
