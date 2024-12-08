@@ -29,7 +29,7 @@ class MeanUncertainty:
 
     def __str__(self) -> str:
         """Returns a string representation of the MeanUncertainty object."""
-        return f"MeanUncertainty(mean={self.mean:.4f}, stderr={self.stderr:.4f}, stderr={self.rel_err:.4f})"
+        return f"MeanUncertainty(mean={self.mean:.4f}, stderr={self.stderr:.4f}, rel_err={self.rel_err:.4f})"
 
     def __repr__(self) -> str:
         return self.__str__()
