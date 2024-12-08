@@ -28,10 +28,10 @@ class MeanUncertainty:
 
     def __str__(self) -> str:
         """Returns a string representation of the MeanUncertainty object."""
-        return f"MeanUncertainty(mean={self.mean}, stderr={self.stderr})"
+        return f"MeanUncertainty(mean={self.mean:.4f}, stderr={self.stderr:.4f})"
 
     def __repr__(self) -> str:
-        return f"MeanUncertainty(mean={self.mean}, stderr={self.stderr})"
+        return f"MeanUncertainty(mean={self.mean:.4f}, stderr={self.stderr:.4f})"
 
     def __iter__(self) -> Iterator[float]:
         """Allows iteration over the MeanUncertainty instance, yielding mean and stderr."""
