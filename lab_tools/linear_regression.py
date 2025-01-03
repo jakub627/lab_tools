@@ -62,39 +62,63 @@ class LinearRegression:
         self.y: np.ndarray = self.slope * self.x + self.intercept
         return self
 
-    def predict_y(self, x: ArrayLike) -> np.ndarray:
-        """Predicts the Y value for a given X using the fitted linear regression model.
-
-        Args:
-            x (ArrayLike): The x value(s) for which to predict the corresponding y value(s).
-
-        Raises:
-            ValueError: If the model has not been fitted yet (slope or intercept is 0.0).
-
-        Returns:
-            np.ndarray: The predicted y value(s) for the given x.
+    def predict_y(self, x: ArrayLike, a, c) -> tuple[np.ndarray, np.ndarray]:
         """
+        Predicts the Y value for a given X using the fitted linear regression model.
+
+        Parameters
+        ----------
+        x : ArrayLike
+            The x value(s) for which to predict the corresponding y value(s).
+
+        Returns
+        -------
+        tuple[np.ndarray,np.ndarray]
+            The predicted y value(s) for the given x with uncertainties.
+
+        Raises
+        ------
+        ValueError
+            If the model has not been fitted yet (slope or intercept is 0.0).
+        """
+
         x = np.asarray(x)  # Convert input to np.ndarray to ensure consistency
         if self.slope == 0.0 and self.intercept == 0.0:
             raise ValueError("Model has not been fitted yet.")
-        return self.slope * x + self.intercept
 
-    def predict_x(self, y: ArrayLike) -> np.ndarray:
-        """Predicts the X value for a given Y using the fitted linear regression model.
+        y = self.slope * x + self.intercept
+        uy = np.sqrt((self.stderr * x) ** 2 + self.intercept_stderr**2)
+        return y, uy
 
-        Args:
-            y (ArrayLike): The y value(s) for which to predict the corresponding x value(s).
+    def predict_x(self, y: ArrayLike) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Predicts the X value for a given Y using the fitted linear regression model.
 
-        Raises:
-            ValueError: If the model has not been fitted yet (slope or intercept is 0.0).
+        Parameters
+        ----------
+        y : ArrayLike
+            The y value(s) for which to predict the corresponding x value(s).
 
-        Returns:
-            np.ndarray: The predicted x value(s) for the given y.
+        Returns
+        -------
+        tuple[np.ndarray, np.ndarray]
+            The predicted x value(s) for the given y with uncertainties.
+
+        Raises
+        ------
+        ValueError
+            If the model has not been fitted yet (slope or intercept is 0.0).
         """
         y = np.asarray(y)  # Convert input to np.ndarray to ensure consistency
         if self.slope == 0.0 and self.intercept == 0.0:
             raise ValueError("Model has not been fitted yet.")
-        return (y - self.intercept) / self.slope
+
+        x = (y - self.intercept) / self.slope
+        ux = np.sqrt(
+            (self.intercept_stderr / self.slope) ** 2
+            + ((y - self.intercept) / self.slope**2 * self.stderr) ** 2
+        )
+        return x, ux
 
     def __str__(self) -> str:
         """Returns a string representation of the fitted linear regression model.
