@@ -4,6 +4,8 @@ import pandas as pd
 from scipy import stats
 from typing import Iterator, Optional, Tuple
 
+from lab_tools.rounding import round_to_2
+
 
 class LinearRegression:
     def __init__(
@@ -117,18 +119,29 @@ class LinearRegression:
         yield self.intercept_stderr
         yield self.rvalue
 
-    def to_dataframe(self) -> pd.DataFrame:
+    def to_dataframe(self, rounded: bool = False) -> pd.DataFrame:
         """
         Convert the linear regression parameters to a pandas DataFeame.
 
         :return pd.DataFrame: DataFrame containing the linear regression parameters.
         """
+        a = round_to_2(self.slope, self.stderr) if rounded else self.slope
+        ua = round_to_2(self.stderr) if rounded else self.stderr
+        b = (
+            round_to_2(self.intercept, self.intercept_stderr)
+            if rounded
+            else self.intercept
+        )
+        ub = round_to_2(self.intercept_stderr) if rounded else self.intercept_stderr
+        rval = round_to_2(self.rvalue, 0.000012) if rounded else self.rvalue
+        r2 = round_to_2(self.rvalue**2, 0.000012) if rounded else self.rvalue ** 2
+
         return pd.DataFrame(
             {
-                "slope": [self.slope, self.stderr],
-                "intercept": [self.intercept, self.intercept_stderr],
-                "r_squared": [self.rvalue**2, 0.0],
-                "rvalue": [self.rvalue, 0.0],
+                "slope": [a, ua],
+                "intercept": [b, ub],
+                "r_squared": [r2, 0.0],
+                "rvalue": [rval, 0.0],
             },
             index=["x", "u_x"],
         )
