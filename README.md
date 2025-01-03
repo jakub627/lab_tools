@@ -91,6 +91,7 @@ lab_tools/
 - Python 3.x
 - numpy
 - scipy
+- pandas
 
 ## License
 

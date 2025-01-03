@@ -1,5 +1,6 @@
 from numpy.typing import ArrayLike
 import numpy as np
+import pandas as pd
 from scipy import stats
 from typing import Iterator, Optional, Tuple
 
@@ -91,7 +92,7 @@ class LinearRegression:
         y = np.asarray(y)  # Convert input to np.ndarray to ensure consistency
         if self.slope == 0.0 and self.intercept == 0.0:
             raise ValueError("Model has not been fitted yet.")
-        return  (y - self.intercept)/self.slope
+        return (y - self.intercept) / self.slope
 
     def __str__(self) -> str:
         """Returns a string representation of the fitted linear regression model.
@@ -104,6 +105,7 @@ class LinearRegression:
             f"stderr={self.stderr:.4f}, intercept_stderr={self.intercept_stderr:.4f}, "
             f"rvalue={self.rvalue:.4f})"
         )
+
     def __repr__(self) -> str:
         return self.__str__()
 
@@ -114,3 +116,19 @@ class LinearRegression:
         yield self.stderr
         yield self.intercept_stderr
         yield self.rvalue
+
+    def to_dataframe(self) -> pd.DataFrame:
+        """
+        Convert the linear regression parameters to a pandas DataFeame.
+
+        :return pd.DataFrame: DataFrame containing the linear regression parameters.
+        """
+        return pd.DataFrame(
+            {
+                "slope": [self.slope, self.stderr],
+                "intercept": [self.intercept, self.intercept_stderr],
+                "r_squared": [self.rvalue**2, 0.0],
+                "rvalue": [self.rvalue, 0.0],
+            },
+            index=["x", "u_x"],
+        )
