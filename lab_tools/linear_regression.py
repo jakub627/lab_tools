@@ -62,7 +62,7 @@ class LinearRegression:
         self.y: np.ndarray = self.slope * self.x + self.intercept
         return self
 
-    def predict_y(self, x: ArrayLike, a, c) -> tuple[np.ndarray, np.ndarray]:
+    def predict_y(self, x: ArrayLike) -> tuple[np.ndarray, np.ndarray]:
         """
         Predicts the Y value for a given X using the fitted linear regression model.
 
