@@ -5,8 +5,8 @@ setup(
     version="0.2.2",
     packages=find_packages(),
     install_requires=[
-        "numpy>=1.18.5",
-        "scipy>=1.5.0",
+        "numpy>=1.25.0",  # Zmieniona minimalna wersja
+        "scipy>=1.11.0",  # Zmieniona minimalna wersja
     ],
     description="A custom library for report calculations, including data analysis and uncertainty measurement tools.",
     author="jakub627",
