@@ -162,23 +162,44 @@ def rounded_string(
     unit_x: str = "",
     scale_x: int = 0,
     scale_u_x: None | int = None,
+    is_unc: bool = True,
     t: bool | int = False,
     n: bool | int = False,
 ) -> str:
     """
-    Prints a value along with its uncertainty, rounded to two significant digits and their units.
+    Returns a string of a value along with its uncertainty, rounded to two significant digits and their units.
     The decimal points of the values are aligned.
 
-    :param float x: Measured value to be printed.
-    :param float u_x: Uncertainty of the measured value, defaults to 0.
-    :param str s_x: Name of the measured value, defaults to "x".
-    :param str unit_x: Unit of the measured value, defaults to "".
-    :param int scale_x: Scale - the power of 10 by which the measured value will be multiplied, defaults to 0.
-    :param None | int scale_u_x: Scale - the power of 10 by which the uncertainty will be multiplied, defaults to None.
-    :param bool | int n: Inserts a new line before printing, defaults to False.
-    :param bool | int t: Inserts a tabulation before printing, defaults to False.
-    :raises ValueError: If the exponent is not a valid SI exponent.
-    :return str: The formatted string with the measured value and its uncertainty.
+    Parameters
+    ----------
+    `x` : `float`
+        Measured value to be printed.
+    `u_x` : `float`, optional
+        Uncertainty of the measured value, by default 0
+    `s_x` : `str`, optional
+        Name of the measured value, by default `"x"`
+    `unit_x` : `str`, optional
+        Unit of the measured value, by default `""`
+    `scale_x` : `int`, optional
+        Scale - the power of 10 by which the measured value will be multiplied, by default `0`
+    `scale_u_x` : `None | int`, optional
+        Scale - the power of 10 by which the uncertainty will be multiplied, by default `None`
+    `is_unc` : `bool`, optional
+        Wether to take uncertainty into account when returning string, by default `True`
+    `t` : `bool | int`, optional
+        Inserts a tabulation before printing, by default `False`
+    `n` : `bool | int`, optional
+        Inserts a new line before printing, by default `False`
+
+    Returns
+    -------
+    `str`
+        The formatted string with the measured value and its uncertainty.
+
+    Raises
+    ------
+    `ValueError`
+        If the exponent is not a valid SI exponent.
     """
 
     def exponent_to_prefix(exponent: int) -> str:
@@ -211,7 +232,7 @@ def rounded_string(
             raise ValueError(f"Exponent '{exponent}' is not a valid SI exponent.")
 
     scale_u_x = scale_x if not scale_u_x else scale_u_x
-    s_u_x = None if not u_x else "u_" + s_x
+    s_u_x = None if (not u_x or not is_unc) else "u_" + s_x
 
     x_rounded = round_to_2(x * 10**-scale_x, u_x * 10**-scale_x)
     u_x_rounded = round_to_2(u_x * 10**-scale_u_x)
