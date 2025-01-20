@@ -246,7 +246,7 @@ def rounded_string(
         u_x_rounded_str = f"{u_x_rounded:.{rounding_index}f}"
 
     max_val_len = max(len(str(int(x_rounded))), len(str(int(x_rounded)))) + len(u_x_rounded_str) - 1 if scale_x == scale_u_x and u_x else 0  # type: ignore
-    max_str_len = len(s_u_x) if s_u_x else 0
+    max_str_len = len(s_u_x) if s_u_x and is_unc else 0
 
     newline = "\n" if n else ""
     tab = "\t" if t else ""
