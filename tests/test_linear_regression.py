@@ -35,10 +35,11 @@ def test_linear_regression_predict():
 
     # Predict for a new X value
     X_new = [6]
-    Y_pred = model.predict(X_new)
+    Y_pred = model.predict_y(X_new)
 
     # Check if prediction is a float and matches the expected value
-    assert isinstance(Y_pred, np.ndarray), "Prediction should be a numpy array."
+    assert isinstance(Y_pred[0], np.ndarray), "Prediction should be a numpy array."
+    assert isinstance(Y_pred[1], np.ndarray), "Prediction should be a numpy array."
     assert Y_pred[0] == pytest.approx(
         5.8, rel=1e-2
     ), f"Predicted value for x=6 is incorrect, got {Y_pred[0]}."
@@ -53,7 +54,7 @@ def test_linear_regression_unfitted_predict():
 
     # Predict without fitting the model
     with pytest.raises(ValueError, match="Model has not been fitted yet."):
-        model.predict([6])
+        model.predict_y([6])
 
 
 def test_linear_regression_string_representation():

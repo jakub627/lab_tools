@@ -145,7 +145,7 @@ class LinearRegression:
 
     def to_dataframe(self, rounded: bool = False) -> pd.DataFrame:
         """
-        Convert the linear regression parameters to a pandas DataFeame.
+        Convert the linear regression parameters to a pandas DataFrame.
 
         :return pd.DataFrame: DataFrame containing the linear regression parameters.
         """
