@@ -232,7 +232,7 @@ def rounded_string(
             raise ValueError(f"Exponent '{exponent}' is not a valid SI exponent.")
 
     scale_u_x = scale_x if not scale_u_x else scale_u_x
-    s_u_x = None if (not u_x or not is_unc) else "u_" + s_x
+    s_u_x = None if not u_x else "u_" + s_x
 
     x_rounded = round_to_2(x * 10**-scale_x, u_x * 10**-scale_x)
     u_x_rounded = round_to_2(u_x * 10**-scale_u_x)
@@ -257,7 +257,7 @@ def rounded_string(
     x_str = f"{newline}{tab}{s_x:>{max_str_len}} = {x_rounded_str:>{max_val_len}}{f' [{prefix_x}{unit_x}]' if unit_x else ''}"
     u_x_str = (
         f"\n{tab}{s_u_x:>{max_str_len}} = {u_x_rounded_str:>{max_val_len}}{f' [{prefix_u_x}{unit_x}]' if unit_x else ''}"
-        if u_x
+        if u_x and is_unc
         else ""
     )
 
