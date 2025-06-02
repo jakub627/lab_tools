@@ -89,4 +89,4 @@ def evaluate_with_uncertainty(
     # Calculate total uncertainty
     uncertainty = np.sqrt(sum(squared_uncertainties))
 
-    return sp.N(value), uncertainty
+    return float(sp.N(value)), float(uncertainty)

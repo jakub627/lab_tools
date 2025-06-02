@@ -99,4 +99,4 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 
 ## Contact
 
-For any questions or issues, please open an issue on the repository or contact me directly via email at <dybich89@gmail.com>.
+For any questions or issues, please open an issue on the repository.

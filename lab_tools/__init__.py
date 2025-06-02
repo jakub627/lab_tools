@@ -4,6 +4,7 @@ from .mean_uncertainty import *
 from .fit_curve import *
 from .plotting import *
 from .rounding import *
+from .uncertainties import *
 
 __all__ = [
     "LinearRegression",
@@ -11,5 +12,6 @@ __all__ = [
     "FitCurve",
     "checking",
     "plotting",
-    "rounding"
+    "rounding",
+    "uncertainties",
 ]
