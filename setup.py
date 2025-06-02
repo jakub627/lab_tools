@@ -6,13 +6,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="lab_tools",
-    version="0.2.3",
+    version="0.2.4",
     packages=find_packages(),
     install_requires=[
-        "numpy>=1.25.0",  # Numerical computations
-        "scipy>=1.11.0",  # Scientific computing
-        "sympy>=1.12",  # Symbolic mathematics
-        "pandas>=2.0.0",  # Data manipulation and analysis
+        "numpy>=1.25.0",
+        "pandas>=2.0.0",
+        "scipy>=1.11.0",
+        "sympy>=1.12",
     ],
     description="A custom library for report calculations, including data analysis and uncertainty measurement tools.",
     long_description=long_description,
