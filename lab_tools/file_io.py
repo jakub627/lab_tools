@@ -46,3 +46,19 @@ def json_load(file: FileDescriptorOrPath) -> dict[Any, Any]:
     _check_extension(file, ".json")
     with open(file, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def txt_dump(file: FileDescriptorOrPath, data: str) -> None:
+    if not isinstance(data, str):
+        raise TypeError(
+            f"Invalid data type: expected str, but got {type(data).__name__}."
+        )
+    _check_extension(file, ".txt")
+    with open(file, "w", encoding="utf-8") as f:
+        f.write(data)
+
+
+def txt_load(file: FileDescriptorOrPath) -> str:
+    _check_extension(file, ".txt")
+    with open(file, "r", encoding="utf-8") as f:
+        return f.read()
