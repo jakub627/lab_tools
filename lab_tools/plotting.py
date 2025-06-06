@@ -69,7 +69,8 @@ def plot_bg(
     plt.grid(isGrid, linestyle="--", alpha=0.6 if isGrid else 0)
 
     ax = plt.gca()
-    ax.set_facecolor(facecolor)
+    if facecolor:
+        ax.set_facecolor(facecolor)
 
 
 def plot_errorbar(
