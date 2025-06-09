@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="lab_tools",
-    version="0.2.4",
+    version="0.2.5",
     packages=find_packages(),
     install_requires=[
         "numpy>=1.25.0",
