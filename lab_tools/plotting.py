@@ -11,19 +11,31 @@ from numpy.typing import ArrayLike
 from scipy.interpolate import make_interp_spline
 
 
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
+
+
 def plot_bg(
     xlabel: str = "",
     ylabel: str = "",
+    title: str = "",
     xformat: int = 0,
     yformat: int = 0,
-    isLegend: bool = False,
+    xscale: str = "linear",
+    yscale: str = "linear",
     xlim: tuple[float, float] | None = None,
     ylim: tuple[float, float] | None = None,
+    margins: tuple[float, float] = (0.05, 0.05),
+    isLegend: bool = False,
+    isGrid: bool = True,
     facecolor: str = "#f4f4f4",
+    grid_style: str = "--",
+    grid_alpha: float = 0.6,
     fontsize_x: int = 12,
     fontsize_y: int = 12,
+    fontsize_title: int = 14,
     fontsize_legend: int = 12,
-    isGrid: bool = True,
     ax: Axes | None = None,
 ) -> None:
     """
@@ -35,47 +47,65 @@ def plot_bg(
         Label for the x-axis, by default ""
     ylabel : str, optional
         Label for the y-axis, by default ""
+    title : str, optional
+        Title of the plot, by default ""
     xformat : int, optional
         Exponent threshold for scientific notation on the x-axis, by default 0
     yformat : int, optional
         Exponent threshold for scientific notation on the y-axis, by default 0
-    isLegend : bool, optional
-        Whether to display the legend, by default False
+    xscale : str, optional
+        Scale type for the x-axis ('linear', 'log', etc.), by default "linear"
+    yscale : str, optional
+        Scale type for the y-axis ('linear', 'log', etc.), by default "linear"
     xlim : tuple[float, float] | None, optional
         Limits for the x-axis, by default None
     ylim : tuple[float, float] | None, optional
         Limits for the y-axis, by default None
+    margins : tuple[float, float], optional
+        Relative margins to apply if limits are set manually, by default (0.05, 0.05)
+    isLegend : bool, optional
+        Whether to display the legend, by default False
+    isGrid : bool, optional
+        Whether to display a grid, by default True
     facecolor : str, optional
         Background color of the plot area, by default "#f4f4f4"
+    grid_style : str, optional
+        Line style for the grid, by default "--"
+    grid_alpha : float, optional
+        Transparency for the grid lines, by default 0.6
     fontsize_x : int, optional
         Font size for the x-axis label, by default 12
     fontsize_y : int, optional
         Font size for the y-axis label, by default 12
+    fontsize_title : int, optional
+        Font size for the plot title, by default 14
     fontsize_legend : int, optional
         Font size for the legend text, by default 12
-    isGrid : bool, optional
-        Whether to display a grid, by default True
     ax : Axes | None, optional
         A Matplotlib Axes object to apply formatting to, by default None
 
     Raises
     ------
     TypeError
-        If xlim is provided but is not a tuple of two floats
-    TypeError
-        If ylim is provided but is not a tuple of two floats
+        If xlim or ylim is provided but not a tuple of two floats
     """
     if ax is None:
         ax = plt.gca()
 
-    # Set background color
+    # Scaling
+    ax.set_xscale(xscale)
+    ax.set_yscale(yscale)
+
+    # Background
     ax.set_facecolor(facecolor)
 
-    # Axis labels
+    # Labels and title
     if xlabel:
         ax.set_xlabel(xlabel, fontsize=fontsize_x)
     if ylabel:
         ax.set_ylabel(ylabel, fontsize=fontsize_y)
+    if title:
+        ax.set_title(title, fontsize=fontsize_title)
 
     # Scientific notation
     if xformat:
@@ -83,18 +113,30 @@ def plot_bg(
     if yformat:
         ax.ticklabel_format(style="sci", axis="y", scilimits=(yformat, yformat))
 
-    # Limits
+    # Limits and margins
     if xlim is not None:
-        if isinstance(xlim, tuple):
-            ax.set_xlim(xlim)
-        else:
-            raise TypeError(f"xlim must be a tuple, got {type(xlim)}")
+        if not (
+            isinstance(xlim, tuple)
+            and len(xlim) == 2
+            and all(isinstance(v, (int, float)) for v in xlim)
+        ):
+            raise TypeError("xlim must be a tuple of two floats.")
+        dx = abs(xlim[1] - xlim[0])
+        ax.set_xlim(xlim[0] - margins[0] * dx, xlim[1] + margins[0] * dx)
+    else:
+        ax.margins(x=margins[0])
 
     if ylim is not None:
-        if isinstance(ylim, tuple):
-            ax.set_ylim(ylim)
-        else:
-            raise TypeError(f"ylim must be a tuple, got {type(ylim)}")
+        if not (
+            isinstance(ylim, tuple)
+            and len(ylim) == 2
+            and all(isinstance(v, (int, float)) for v in ylim)
+        ):
+            raise TypeError("ylim must be a tuple of two floats.")
+        dy = abs(ylim[1] - ylim[0])
+        ax.set_ylim(ylim[0] - margins[1] * dy, ylim[1] + margins[1] * dy)
+    else:
+        ax.margins(y=margins[1])
 
     # Legend
     if isLegend:
@@ -107,7 +149,8 @@ def plot_bg(
         )
 
     # Grid
-    ax.grid(isGrid, linestyle="--", alpha=0.6 if isGrid else 0)
+    if isGrid:
+        ax.grid(True, linestyle=grid_style, alpha=grid_alpha)
 
 
 def plot_errorbar(
