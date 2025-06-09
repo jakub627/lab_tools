@@ -1,12 +1,14 @@
 import array
 from turtle import bgcolor, color
 from typing import Any, List, Tuple
-from matplotlib import figure
+
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import figure
+from matplotlib.axes import Axes
 from numpy._typing._array_like import NDArray
-from scipy.interpolate import make_interp_spline
 from numpy.typing import ArrayLike
+from scipy.interpolate import make_interp_spline
 
 
 def plot_bg(
@@ -15,62 +17,97 @@ def plot_bg(
     xformat: int = 0,
     yformat: int = 0,
     isLegend: bool = False,
-    xlim: tuple | None = None,
-    ylim: tuple | None = None,
+    xlim: tuple[float, float] | None = None,
+    ylim: tuple[float, float] | None = None,
     facecolor: str = "#f4f4f4",
+    fontsize_x: int = 12,
+    fontsize_y: int = 12,
+    fontsize_legend: int = 12,
     isGrid: bool = True,
+    ax: Axes | None = None,
 ) -> None:
-    """Creates the figure for a plot
-
-    :param xlabel: Label for the x-axis, defaults to ""
-    :type xlabel: str, optional
-    :param ylabel: Label for the y-axis, defaults to ""
-    :type ylabel: str, optional
-    :param xformat: Order of magnitude for the x-axis, defaults to 0
-    :type xformat: int, optional
-    :param yformat: Order of magnitude for the y-axis, defaults to 0
-    :type yformat: int, optional
-    :param xlim: Limits for the x-axis as a tuple, defaults to None
-    :type xlim: tuple | None, optional
-    :param ylim: Limits for the y-axis as a tuple, defaults to None
-    :type ylim: tuple | None, optional
-    :param isLegend: Whether to display the legend, defaults to False
-    :type isLegend: bool, optional
-    :param facecolor: Background color for the plot, defaults to "#f4f4f4"
-    :type facecolor: str, optional
-    :param isGrid: Whether to show the grid, defaults to True
-    :type isGrid: bool, optional
-    :raises TypeError: If `xlim` is not a tuple
-    :raises TypeError: If `ylim` is not a tuple
     """
-    plt.grid(True, linestyle="--", alpha=0.6)
+    Configure and style a Matplotlib Axes object for plotting.
+
+    Parameters
+    ----------
+    xlabel : str, optional
+        Label for the x-axis, by default ""
+    ylabel : str, optional
+        Label for the y-axis, by default ""
+    xformat : int, optional
+        Exponent threshold for scientific notation on the x-axis, by default 0
+    yformat : int, optional
+        Exponent threshold for scientific notation on the y-axis, by default 0
+    isLegend : bool, optional
+        Whether to display the legend, by default False
+    xlim : tuple[float, float] | None, optional
+        Limits for the x-axis, by default None
+    ylim : tuple[float, float] | None, optional
+        Limits for the y-axis, by default None
+    facecolor : str, optional
+        Background color of the plot area, by default "#f4f4f4"
+    fontsize_x : int, optional
+        Font size for the x-axis label, by default 12
+    fontsize_y : int, optional
+        Font size for the y-axis label, by default 12
+    fontsize_legend : int, optional
+        Font size for the legend text, by default 12
+    isGrid : bool, optional
+        Whether to display a grid, by default True
+    ax : Axes | None, optional
+        A Matplotlib Axes object to apply formatting to, by default None
+
+    Raises
+    ------
+    TypeError
+        If xlim is provided but is not a tuple of two floats
+    TypeError
+        If ylim is provided but is not a tuple of two floats
+    """
+    if ax is None:
+        ax = plt.gca()
+
+    # Set background color
+    ax.set_facecolor(facecolor)
+
+    # Axis labels
+    if xlabel:
+        ax.set_xlabel(xlabel, fontsize=fontsize_x)
+    if ylabel:
+        ax.set_ylabel(ylabel, fontsize=fontsize_y)
+
+    # Scientific notation
     if xformat:
-        plt.ticklabel_format(style="sci", axis="x", scilimits=(xformat, xformat))
+        ax.ticklabel_format(style="sci", axis="x", scilimits=(xformat, xformat))
     if yformat:
-        plt.ticklabel_format(style="sci", axis="y", scilimits=(yformat, yformat))
-    plt.ylabel(ylabel, fontsize=12)
-    plt.xlabel(xlabel, fontsize=12)
+        ax.ticklabel_format(style="sci", axis="y", scilimits=(yformat, yformat))
 
-    if xlim:
+    # Limits
+    if xlim is not None:
         if isinstance(xlim, tuple):
-            plt.xlim(xlim)
+            ax.set_xlim(xlim)
         else:
-            raise TypeError(f"xlim must be of type tuple, got {type(xlim)}")
+            raise TypeError(f"xlim must be a tuple, got {type(xlim)}")
 
-    if ylim:
+    if ylim is not None:
         if isinstance(ylim, tuple):
-            plt.ylim(ylim)
+            ax.set_ylim(ylim)
         else:
-            raise TypeError(f"ylim must be of type tuple, got {type(ylim)}")
+            raise TypeError(f"ylim must be a tuple, got {type(ylim)}")
 
+    # Legend
     if isLegend:
-        plt.legend(fontsize=10)
+        ax.legend(
+            fontsize=fontsize_legend,
+            loc="best",
+            frameon=True,
+            fancybox=True,
+            edgecolor="black",
+        )
 
-    plt.grid(isGrid, linestyle="--", alpha=0.6 if isGrid else 0)
-
-    ax = plt.gca()
-    if facecolor:
-        ax.set_facecolor(facecolor)
+    # Grid
+    ax.grid(isGrid, linestyle="--", alpha=0.6 if isGrid else 0)
 
 
 def plot_errorbar(
@@ -138,7 +175,7 @@ def plot_scatter(
 
 def interpolate(
     x: ArrayLike, y: ArrayLike, k: int = 3, npoints: int = 300
-) -> Tuple[NDArray[np.float64], NDArray[np.float64]]:
+) -> Tuple[NDArray[Any], NDArray[Any]]:
     """
     Calculates the points for interpolated plot.
 
