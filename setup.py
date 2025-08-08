@@ -18,7 +18,6 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="jakub627",
-    author_email="dybich89@gmail.com",
     url="https://github.com/jakub627/lab_tools",
     classifiers=[
         "Development Status :: 4 - Beta",
