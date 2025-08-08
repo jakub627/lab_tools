@@ -17,19 +17,20 @@ from matplotlib.axes import Axes
 
 
 def plot_bg(
-    xlabel: str = "",
-    ylabel: str = "",
-    title: str = "",
-    xformat: int = 0,
-    yformat: int = 0,
-    xscale: str = "linear",
-    yscale: str = "linear",
+    xlabel: str | None = None,
+    ylabel: str | None = None,
+    title: str | None = None,
+    *,
+    xformat: int | None = None,
+    yformat: int | None = None,
+    xscale: str | None = None,
+    yscale: str | None = None,
     xlim: tuple[float, float] | None = None,
     ylim: tuple[float, float] | None = None,
     margins: tuple[float, float] = (0.05, 0.05),
-    isLegend: bool = False,
-    isGrid: bool = True,
-    facecolor: str = "#f4f4f4",
+    isLegend: bool | None = None,
+    isGrid: bool | None = None,
+    facecolor: str | None = None,
     grid_style: str = "--",
     grid_alpha: float = 0.6,
     fontsize_x: int = 12,
@@ -93,24 +94,27 @@ def plot_bg(
         ax = plt.gca()
 
     # Scaling
-    ax.set_xscale(xscale)
-    ax.set_yscale(yscale)
+    if xscale is not None:
+        ax.set_xscale(xscale)
+    if yscale is not None:
+        ax.set_yscale(yscale)
 
     # Background
-    ax.set_facecolor(facecolor)
+    if facecolor is not None:
+        ax.set_facecolor(facecolor)
 
     # Labels and title
-    if xlabel:
+    if xlabel is not None:
         ax.set_xlabel(xlabel, fontsize=fontsize_x)
-    if ylabel:
+    if ylabel is not None:
         ax.set_ylabel(ylabel, fontsize=fontsize_y)
-    if title:
+    if title is not None:
         ax.set_title(title, fontsize=fontsize_title)
 
     # Scientific notation
-    if xformat:
+    if xformat is not None:
         ax.ticklabel_format(style="sci", axis="x", scilimits=(xformat, xformat))
-    if yformat:
+    if yformat is not None:
         ax.ticklabel_format(style="sci", axis="y", scilimits=(yformat, yformat))
 
     # Limits and margins
@@ -139,7 +143,7 @@ def plot_bg(
         ax.margins(y=margins[1])
 
     # Legend
-    if isLegend:
+    if isLegend is not None:
         ax.legend(
             fontsize=fontsize_legend,
             loc="best",
@@ -149,7 +153,7 @@ def plot_bg(
         )
 
     # Grid
-    if isGrid:
+    if isGrid is not None:
         ax.grid(True, linestyle=grid_style, alpha=grid_alpha)
 
 
