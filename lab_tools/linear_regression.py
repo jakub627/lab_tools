@@ -8,11 +8,13 @@ from lab_tools.rounding import round_to_2
 
 
 class LinearRegression:
+
     def __init__(
         self,
         X: ArrayLike,
         Y: ArrayLike,
         limits: Optional[Tuple[float, float]] = None,
+        force_zero: bool = False,
     ) -> None:
         """Initialize the LinearRegression object.
 
@@ -26,6 +28,7 @@ class LinearRegression:
         """
         self._X: np.ndarray = np.asarray(X)
         self._Y: np.ndarray = np.asarray(Y)
+        self.force_zero = force_zero
 
         if len(self._X) != len(self._Y):
             raise ValueError("X and Y must have the same length.")
@@ -45,19 +48,26 @@ class LinearRegression:
         self.intercept_stderr: float = 0.0
 
     def fit(self) -> "LinearRegression":
-        """Fits the linear regression model using the provided X and Y data.
+        """Fits the linear regression model using the provided X and Y data."""
+        if self.force_zero:
+            self.slope = np.sum(self._X * self._Y) / np.sum(self._X**2)
+            self.intercept = 0.0
+            y_fit = self.slope * self._X
+            residuals = self._Y - y_fit
+            n = len(self._X)
+            self.stderr = np.sqrt(np.sum(residuals**2) / (n - 1)) / np.sqrt(
+                np.sum(self._X**2)
+            )
+            self.intercept_stderr = 0.0
+            self.rvalue = np.corrcoef(self._X, self._Y)[0, 1]
+        else:
+            reg: _ = stats.linregress(self._X, self._Y)  # type: ignore
+            self.slope: float = reg.slope
+            self.intercept: float = reg.intercept
+            self.rvalue: float = reg.rvalue
+            self.stderr: float = reg.stderr
+            self.intercept_stderr: float = reg.intercept_stderr
 
-        Returns:
-            LinearRegression: The instance of the class after fitting the model.
-        """
-        reg: _ = stats.linregress(self._X, self._Y)  # type: ignore
-
-        # Accessing the result attributes
-        self.slope: float = reg.slope
-        self.intercept: float = reg.intercept
-        self.rvalue: float = reg.rvalue
-        self.stderr: float = reg.stderr
-        self.intercept_stderr: float = reg.intercept_stderr
         self.x: np.ndarray = np.linspace(self._X_min, self._X_max)
         self.y: np.ndarray = self.slope * self.x + self.intercept
         return self
@@ -158,7 +168,7 @@ class LinearRegression:
         )
         ub = round_to_2(self.intercept_stderr) if rounded else self.intercept_stderr
         rval = round_to_2(self.rvalue, 0.000012) if rounded else self.rvalue
-        r2 = round_to_2(self.rvalue**2, 0.000012) if rounded else self.rvalue ** 2
+        r2 = round_to_2(self.rvalue**2, 0.000012) if rounded else self.rvalue**2
 
         return pd.DataFrame(
             {
