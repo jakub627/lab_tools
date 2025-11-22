@@ -38,8 +38,8 @@ class LinearRegression:
             self._X_min: float = limits[0]
             self._X_max: float = limits[1]
         else:
-            self._X_min: float = float(min(self._X))
-            self._X_max: float = float(max(self._X))
+            self._X_min = np.min(self._X)
+            self._X_max = np.max(self._X)
 
         self.slope: float = 0.0
         self.intercept: float = 0.0
@@ -59,17 +59,18 @@ class LinearRegression:
                 np.sum(self._X**2)
             )
             self.intercept_stderr = 0.0
-            self.rvalue = np.corrcoef(self._X, self._Y)[0, 1]
+            self.rvalue = np.corrcoef(np.asarray(self._X), np.asarray(self._Y))[0, 1]
         else:
-            reg: _ = stats.linregress(self._X, self._Y)  # type: ignore
-            self.slope: float = reg.slope
-            self.intercept: float = reg.intercept
-            self.rvalue: float = reg.rvalue
-            self.stderr: float = reg.stderr
-            self.intercept_stderr: float = reg.intercept_stderr
+            reg: _ = stats.linregress(np.asarray(self._X), np.asarray(self._Y))  # type: ignore
+            self.slope = reg.slope
+            self.intercept = reg.intercept
+            self.rvalue = reg.rvalue
+            self.stderr = reg.stderr
+            self.intercept_stderr = reg.intercept_stderr
 
-        self.x: np.ndarray = np.linspace(self._X_min, self._X_max)
-        self.y: np.ndarray = self.slope * self.x + self.intercept
+        self.x = np.linspace(np.min(self._X), np.max(self._X))
+        self.y = self.slope * self.x + self.intercept
+
         return self
 
     def predict_y(self, x: ArrayLike) -> tuple[np.ndarray, np.ndarray]:
