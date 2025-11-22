@@ -12,6 +12,7 @@ setup(
         "pandas>=2.0.0",
         "scipy>=1.11.0",
         "sympy>=1.12",
+        "h5py",
     ],
     description="A custom library for report calculations, including data analysis and uncertainty measurement tools.",
     long_description=long_description,
