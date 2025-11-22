@@ -28,6 +28,7 @@ class FitCurve(object):
         x: ArrayLike,
         y: ArrayLike,
         limits: tuple[float, float] | None = None,
+        p0: ArrayLike | None = None,
     ) -> None:
         """
         Initialize the FitCurve class with the function to fit and data.
@@ -46,9 +47,13 @@ class FitCurve(object):
         self._fun = fun
         self._x = np.atleast_1d(x)
         self._y = np.atleast_1d(y)
-        self._x_min = limits[0] if limits is not None else np.min(x)
-        self._x_max = limits[1] if limits is not None else np.max(x)
+        self._x_min = limits[0] if limits else np.min(self._x)
+        self._x_max = limits[1] if limits else np.max(self._x)
+        self._p0 = p0
         self._fitted = False
+
+        if len(self._x) != len(self._y):
+            raise ValueError("X and Y must have the same length.")
 
         if len(self._x) != len(self._y):
             raise ValueError("X and Y must have the same length.")
@@ -62,41 +67,41 @@ class FitCurve(object):
             FitCurve: The instance of the FitCurve class with fitted parameters and results.
         """
         try:
-            # Attempt to fit the curve
-            self.popt, self.pcov = curve_fit(self._fun, self._x, self._y)
+            # Fit the curve
+            self.popt, self.pcov = curve_fit(self._fun, self._x, self._y, p0=self._p0)
             self.args = self.popt
 
-            # Calculate fitted values
+            # Fitted values
             self._y_fit = self._fun(self._x, *self.popt)
 
-            # Calculate R²
-            self._ss_res = np.sum((self._y - self._y_fit) ** 2)
-            self._ss_tot = np.sum((self._y - np.mean(self._y)) ** 2)
-            self.r2 = 1 - (self._ss_res / self._ss_tot)
+            # Coefficient of determination R²
+            ss_res = np.sum((self._y - self._y_fit) ** 2)
+            ss_tot = np.sum((self._y - np.mean(self._y)) ** 2)
+            self.r2 = 1 - ss_res / ss_tot
 
-            # Calculate standard errors (uncertainties)
+            # Standard errors
             self.args_stderr = np.sqrt(np.diag(self.pcov))
 
-            # Check for inf in standard errors (could not estimate covariance)
+            # Check for NaN or inf in stderr
             if np.any(np.isnan(self.args_stderr)) or np.any(np.isinf(self.args_stderr)):
                 warnings.warn(
-                    "Covariance of parameters could not be estimated. Uncertainties set to 'inf'.",
+                    "Covariance could not be estimated. Uncertainties set to inf.",
                     OptimizeWarning,
                 )
-                # Optionally, set a fallback value for stderr (for example, a large value or None)
                 self.args_stderr = np.full_like(self.args_stderr, np.inf)
 
         except (RuntimeError, OptimizeWarning) as e:
             warnings.warn(f"Curve fitting failed: {e}")
-            self.args = np.full_like(
-                self._x, np.nan
-            )  # Set parameters to NaN if fitting fails
-            self.args_stderr = np.full_like(self._x, np.nan)  # Uncertainty set to NaN
+            n_params = (
+                self._fun.__code__.co_argcount - 1
+            )  # number of function parameters
+            self.args = np.full(n_params, np.nan)
+            self.args_stderr = np.full(n_params, np.nan)
             self.r2 = np.nan
             self._fitted = False
             return self
 
-        # Generate fitted curve
+        # Generate smooth curve for plotting
         self.x = np.linspace(self._x_min, self._x_max, 100)
         self.y = self._fun(self.x, *self.args)
 
