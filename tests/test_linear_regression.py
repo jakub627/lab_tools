@@ -40,7 +40,7 @@ def test_init_limits_validation(simple_linear_data):
     reg = LinearRegression(x, y, limits=(-5.0, 5.0))
     assert reg.limits == (-5.0, 5.0)
 
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         LinearRegression(x, y, limits=(1.0,))  # type: ignore
 
 
