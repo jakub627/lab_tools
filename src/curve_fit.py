@@ -6,7 +6,7 @@ from numpy.typing import ArrayLike
 from numpy import dtype, float64, ndarray
 from scipy.optimize import curve_fit, OptimizeWarning
 from exceptions import NotFittedError
-from validation import Validate
+from validate import Validate
 from scipy.optimize import fsolve
 
 
@@ -75,13 +75,13 @@ class CurveFit:
     @property
     def r2(self) -> float:
         if not self.fitted or self._r2 is None:
-            raise NotFittedError("Model is not fitted yet.")
+            raise NotFittedError("Model is not fitted yet")
         return self._r2
 
     @property
     def covariance(self) -> ndarray[tuple[int, int], dtype[float64]]:
         if not self.fitted or self._covariance is None:
-            raise NotFittedError("Model is not fitted yet.")
+            raise NotFittedError("Model is not fitted yet")
         return self._covariance
 
     def fit(self) -> Self:

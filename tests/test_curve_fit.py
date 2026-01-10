@@ -43,7 +43,7 @@ class TestCurveFit:
         y = np.array([2, 4, 6])
         with pytest.raises(
             ValueError,
-            match="Limits must be a sequence of two numeric values.",
+            match="Limits must be a sequence of two numeric values",
         ):
             CurveFit(linear_func, x, y, limits=(0, 1, 2))
 
@@ -52,7 +52,7 @@ class TestCurveFit:
         y = np.array([2, 4, 6])
         with pytest.raises(
             ValueError,
-            match="Limits must be a sequence of two numeric values.",
+            match="Limits must be a sequence of two numeric values",
         ):
             CurveFit(linear_func, x, y, limits=("a", "b"))
 
@@ -65,7 +65,7 @@ class TestCurveFit:
     def test_init_multidimensional_arrays(self):
         x = np.array([[1, 2], [3, 4]])
         y = np.array([2, 4])
-        with pytest.raises(ValueError, match="Input arrays must be one-dimensional."):
+        with pytest.raises(ValueError, match="Input arrays must be one-dimensional"):
             CurveFit(linear_func, x, y)
 
     def test_fit_linear(self):
