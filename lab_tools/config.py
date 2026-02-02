@@ -1,3 +1,6 @@
+import logging
+from logging import Logger
+from pathlib import Path
 from typing import Literal, cast
 
 import pint
@@ -237,3 +240,69 @@ class SI:
     alpha = cast(Quantity, Q_(*physical_constants["fine-structure constant"][:2]))
     R_inf = cast(Quantity, Q_(*physical_constants["Rydberg constant"][:2]))
     a_e = cast(Quantity, Q_(*physical_constants["Bohr magneton"][:2]))
+
+
+class LoggerFactory:
+
+    DEFAULT_FORMAT = "%(asctime)s | %(name)s | %(levelname)s | %(message)s"
+    DEFAULT_DATEFMT = "%Y-%m-%d %H:%M:%S"
+
+    @staticmethod
+    def get_logger(
+        name: str,
+        level: int = logging.INFO,
+        log_file: Path | None = None,
+        console: bool = True,
+        file_level: int | None = None,
+        console_level: int | None = None,
+        fmt: str = DEFAULT_FORMAT,
+        datefmt: str = DEFAULT_DATEFMT,
+    ) -> Logger:
+        """
+        Create or return a configured logger
+
+        Parameters
+        ----------
+        name : str
+            Logger name (usually __name__)
+        level : int, optional
+            Base logger level, by default logging.INFO
+        log_file : Path | None, optional
+            Path to log file, by default None
+        console : bool, optional
+            Enable console logging, by default True
+        file_level : int | None, optional
+            Log level for file handler, by default `level`
+        console_level : int | None, optional
+            Log level for console handler, by default `level`
+        fmt : str, optional
+            Log message format, by default DEFAULT_FORMAT
+        datefmt : str, optional
+            Date format, by default DEFAULT_DATEFMT
+
+        Returns
+        -------
+        Logger
+            Logger instance
+        """
+        logger = logging.getLogger(name)
+        logger.setLevel(level)
+        logger.propagate = False
+
+        if logger.handlers:
+            return logger
+        formatter = logging.Formatter(fmt, datefmt=datefmt)
+        if console:
+            ch = logging.StreamHandler()
+            ch.setLevel(console_level or level)
+            ch.setFormatter(formatter)
+            logger.addHandler(ch)
+
+        if log_file is not None:
+            log_file.parent.mkdir(parents=True, exist_ok=True)
+            fh = logging.FileHandler(log_file)
+            fh.setLevel(file_level or level)
+            fh.setFormatter(formatter)
+            logger.addHandler(fh)
+
+        return logger

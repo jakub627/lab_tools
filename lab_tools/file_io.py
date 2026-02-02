@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 import json
 import pickle
 from typing import Any
@@ -7,7 +8,19 @@ from dtypes import FileDescriptorOrPath
 from validate import Validate
 
 
-class PICKLE:
+class FileIO(ABC):
+    @abstractmethod
+    @staticmethod
+    def dump(file: FileDescriptorOrPath, data: Any) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    @staticmethod
+    def load(file: FileDescriptorOrPath) -> Any:
+        raise NotImplementedError
+
+
+class PICKLE(FileIO):
     @staticmethod
     def dump(file: FileDescriptorOrPath, data: Any) -> None:
         Validate.file_extension(file, ".pkl")
@@ -21,7 +34,7 @@ class PICKLE:
             return pickle.load(f)
 
 
-class JSON:
+class JSON(FileIO):
     @staticmethod
     def dump(file: FileDescriptorOrPath, data: dict[Any, Any]) -> None:
         if not isinstance(data, dict):
@@ -39,7 +52,7 @@ class JSON:
             return json.load(f)
 
 
-class TXT:
+class TXT(FileIO):
     @staticmethod
     def dump(file: FileDescriptorOrPath, data: str) -> None:
         if not isinstance(data, str):
