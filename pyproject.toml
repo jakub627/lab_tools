@@ -10,7 +10,13 @@ readme = "README.md"
 requires-python = ">=3.13"
 license = "MIT"
 authors = [{ name = "jakub627" }]
-dependencies = ["numpy>=2.4.1", "pandas>=2.3.3", "pint==0.25", "scipy>=1.16.3"]
+dependencies = [
+    "matplotlib>=3.10.8",
+    "numpy>=2.4.2",
+    "pandas>=3.0.0",
+    "pint==0.25",
+    "scipy>=1.17.0",
+]
 
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -34,7 +40,10 @@ where = ["src"]
 include = ["lab_tools*"]
 
 [dependency-groups]
-dev = ["pytest>=9.0.2"]
+dev = [
+    "pytest>=9.0.2",
+    "uncertainties>=3.2.3",
+]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

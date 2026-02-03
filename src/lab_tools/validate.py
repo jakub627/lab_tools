@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.typing import ArrayLike
 
-from dtypes import FileDescriptorOrPath
+from .dtypes import FileDescriptorOrPath
 
 
 class Validate:

@@ -4,18 +4,18 @@ import pickle
 from typing import Any
 
 
-from dtypes import FileDescriptorOrPath
-from validate import Validate
+from .dtypes import FileDescriptorOrPath
+from .validate import Validate
 
 
 class FileIO(ABC):
-    @abstractmethod
     @staticmethod
+    @abstractmethod
     def dump(file: FileDescriptorOrPath, data: Any) -> None:
         raise NotImplementedError
 
-    @abstractmethod
     @staticmethod
+    @abstractmethod
     def load(file: FileDescriptorOrPath) -> Any:
         raise NotImplementedError
 
