@@ -4,39 +4,37 @@ import pickle
 from typing import Any
 
 
-from dtypes import FileDescriptorOrPath
-from validate import Validate
+from .dtypes import FileDescriptorOrPath
+from .validate import Validate
 
 
 class FileIO(ABC):
+    @classmethod
     @abstractmethod
-    @staticmethod
-    def dump(file: FileDescriptorOrPath, data: Any) -> None:
-        raise NotImplementedError
+    def dump(cls, file: FileDescriptorOrPath, data: Any) -> None: ...
 
+    @classmethod
     @abstractmethod
-    @staticmethod
-    def load(file: FileDescriptorOrPath) -> Any:
-        raise NotImplementedError
+    def load(cls, file: FileDescriptorOrPath) -> Any: ...
 
 
 class PICKLE(FileIO):
-    @staticmethod
-    def dump(file: FileDescriptorOrPath, data: Any) -> None:
+    @classmethod
+    def dump(cls, file: FileDescriptorOrPath, data: Any) -> None:
         Validate.file_extension(file, ".pkl")
         with open(file, "wb") as f:
             pickle.dump(data, f)
 
-    @staticmethod
-    def load(file: FileDescriptorOrPath) -> Any:
+    @classmethod
+    def load(cls, file: FileDescriptorOrPath) -> Any:
         Validate.file_extension(file, ".pkl")
         with open(file, "rb") as f:
             return pickle.load(f)
 
 
 class JSON(FileIO):
-    @staticmethod
-    def dump(file: FileDescriptorOrPath, data: dict[Any, Any]) -> None:
+    @classmethod
+    def dump(cls, file: FileDescriptorOrPath, data: dict[Any, Any]) -> None:
         if not isinstance(data, dict):
             raise TypeError(
                 f"Invalid data type: expected dict, but got {type(data).__name__}."
@@ -45,16 +43,16 @@ class JSON(FileIO):
         with open(file, "w", encoding="utf-8") as f:
             json.dump(data, f)
 
-    @staticmethod
-    def load(file: FileDescriptorOrPath) -> dict[Any, Any]:
+    @classmethod
+    def load(cls, file: FileDescriptorOrPath) -> dict[Any, Any]:
         Validate.file_extension(file, ".json")
         with open(file, "r", encoding="utf-8") as f:
             return json.load(f)
 
 
 class TXT(FileIO):
-    @staticmethod
-    def dump(file: FileDescriptorOrPath, data: str) -> None:
+    @classmethod
+    def dump(cls, file: FileDescriptorOrPath, data: str) -> None:
         if not isinstance(data, str):
             raise TypeError(
                 f"Invalid data type: expected str, but got {type(data).__name__}."
@@ -63,8 +61,8 @@ class TXT(FileIO):
         with open(file, "w", encoding="utf-8") as f:
             f.write(data)
 
-    @staticmethod
-    def load(file: FileDescriptorOrPath) -> str:
+    @classmethod
+    def load(cls, file: FileDescriptorOrPath) -> str:
         Validate.file_extension(file, ".txt")
         with open(file, "r", encoding="utf-8") as f:
             return f.read()

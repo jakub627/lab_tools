@@ -5,8 +5,8 @@ import numpy as np
 from numpy.typing import ArrayLike
 from numpy import dtype, float64, ndarray
 from scipy.optimize import curve_fit, OptimizeWarning
-from exceptions import NotFittedError
-from validate import Validate
+from .exceptions import NotFittedError
+from .validate import Validate
 from scipy.optimize import fsolve
 
 

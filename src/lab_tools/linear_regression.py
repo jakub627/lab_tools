@@ -4,8 +4,8 @@ import numpy as np
 from numpy import float64, ndarray, dtype
 import pandas as pd
 
-from exceptions import NotFittedError
-from validate import Validate
+from .exceptions import NotFittedError
+from .validate import Validate
 
 
 class LinearRegression:

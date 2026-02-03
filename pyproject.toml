@@ -1,26 +1,22 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "lab-tools"
 version = "0.1.0"
 description = "A custom library for report calculations, including data analysis and uncertainty measurement tools."
-readme = { file = "README.md", content-type = "text/markdown" }
-authors = [{ name = "jakub627" }]
+readme = "README.md"
 requires-python = ">=3.13"
-license = { text = "MIT" }
+license = "MIT"
+authors = [{ name = "jakub627" }]
 dependencies = ["numpy>=2.4.1", "pandas>=2.3.3", "pint==0.25", "scipy>=1.16.3"]
+
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Mathematics",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 
@@ -31,12 +27,14 @@ Documentation = "https://github.com/jakub627/lab_tools#readme"
 Bug-Tracker = "https://github.com/jakub627/lab_tools/issues"
 
 [tool.setuptools]
-package-dir = { "" = "lab_tools" }
-include-package-data = true
+package-dir = { "" = "src" }
+
 [tool.setuptools.packages.find]
-where = ["lab_tools"]
+where = ["src"]
+include = ["lab_tools*"]
+
 [dependency-groups]
 dev = ["pytest>=9.0.2"]
 
 [tool.pytest.ini_options]
-pythonpath = "lab_tools"
+pythonpath = ["src"]
