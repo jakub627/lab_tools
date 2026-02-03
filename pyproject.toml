@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lab-tools"
-version = "0.1.0"
+version = "1.0.0"
 description = "A custom library for report calculations, including data analysis and uncertainty measurement tools."
 readme = "README.md"
 requires-python = ">=3.13"
