@@ -3,6 +3,8 @@ from logging import Logger
 from pathlib import Path
 from typing import Literal, cast
 
+from matplotlib import pyplot as plt
+import numpy as np
 import pint
 from matplotlib.axes import Axes
 from matplotlib.colors import LogNorm, Normalize
@@ -145,6 +147,70 @@ class AxesUtils:
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="5%", pad=0.1)
         return cax
+
+    @staticmethod
+    def set_margins(
+        ax: Axes | None = None,
+        margins: tuple[float, float] | None = None,
+    ):
+        if ax is None:
+            ax = plt.gca()
+        margins = margins or (0.05, 0.05)
+
+        xmin, ymin, xmax, ymax = ax.dataLim.extents
+
+        dx = abs(xmax - xmin)
+        dy = abs(ymax - ymin)
+        ax.set_ylim(ymin - margins[0] * dy, ymax + margins[1] * dy)
+        ax.set_xlim(xmin - margins[1] * dx, xmax + margins[1] * dx)
+
+    @staticmethod
+    def get_figsize(
+        margins: tuple[float, float, float, float] = (3.5, 3.5, 3.5, 3.5),
+        paper_dims: tuple[float, float] = (21.0, 29.7),
+        aspect: float | None = 0.6,
+    ) -> tuple[float, float]:
+        """
+        Compute a Matplotlib figure size that fits inside page margins.
+
+        Parameters
+        ----------
+        `margins` : tuple[float, float, float, float], optional
+            Paper margins (top, bottom, left, right) in cm, by default (3.5, 3.5, 3.5, 3.5)
+        `paper_dims` : tuple[float, float], optional
+            Paper dimensions (width, height) in cm, by default (21.0, 29.7)
+        `aspect` : float | None, optional
+            Figure aspect ratio defined as `height / width`.
+            If None, the full available height is used, by default 0.6
+
+        Returns
+        -------
+        tuple[float, float]
+            Figure size in inches (width, height)
+        """
+
+        if any(m < 0 for m in margins):
+            raise ValueError("Margins must be non-negative.")
+
+        top, bottom, left, right = margins
+        paper_w, paper_h = paper_dims
+
+        usable_w = paper_w - left - right
+        usable_h = paper_h - top - bottom
+
+        if usable_w <= 0 or usable_h <= 0:
+            raise ValueError("Margins are larger than paper dimensions.")
+
+        fig_w = usable_w / 2.54
+        if aspect is None:
+            fig_h = usable_h / 2.54
+        else:
+            if aspect <= 0:
+                raise ValueError("aspect must be positive")
+            fig_h = fig_w * aspect
+
+        figsize = (round(fig_w, 1), round(fig_h, 1))
+        return figsize
 
 
 class Norms:
