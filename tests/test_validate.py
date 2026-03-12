@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from validate import Validate
+from lab_tools.validate import Validate
 
 
 class TestValidate:

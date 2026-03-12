@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from exceptions import NotFittedError
-from linear_regression import LinearRegression
+from lab_tools.exceptions import NotFittedError
+from lab_tools.linear_regression import LinearRegression
 
 
 @pytest.fixture

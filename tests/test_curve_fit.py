@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
-from curve_fit import CurveFit
-from exceptions import NotFittedError
+from lab_tools.curve_fit import CurveFit
+from lab_tools.exceptions import NotFittedError
 
 
 def linear_func(x, a, b):

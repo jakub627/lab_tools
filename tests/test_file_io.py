@@ -1,7 +1,5 @@
 import pytest
-import tempfile
-import os
-from file_io import PICKLE, JSON, TXT
+from lab_tools.file_io import PICKLE, JSON, TXT
 
 
 class TestPickle:
