@@ -4,13 +4,19 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lab-tools"
-version = "1.0.0"
+version = "1.1.0"
 description = "A custom library for report calculations, including data analysis and uncertainty measurement tools."
 readme = "README.md"
 requires-python = ">=3.13"
 license = "MIT"
 authors = [{ name = "jakub627" }]
-dependencies = ["numpy>=2.4.1", "pandas>=2.3.3", "pint==0.25", "scipy>=1.16.3"]
+dependencies = [
+    "matplotlib>=3.10.8",
+    "numpy>=2.4.1",
+    "pandas>=2.3.3",
+    "pint==0.25",
+    "scipy>=1.16.3",
+]
 
 classifiers = [
     "Development Status :: 4 - Beta",
