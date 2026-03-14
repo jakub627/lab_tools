@@ -169,6 +169,7 @@ class AxesUtils:
         margins: tuple[float, float, float, float] = (3.5, 3.5, 3.5, 3.5),
         paper_dims: tuple[float, float] = (21.0, 29.7),
         aspect: float | None = 0.6,
+        width_scale: float = 1,
     ) -> tuple[float, float]:
         """
         Compute a Matplotlib figure size that fits inside page margins.
@@ -180,8 +181,9 @@ class AxesUtils:
         `paper_dims` : tuple[float, float], optional
             Paper dimensions (width, height) in cm, by default (21.0, 29.7)
         `aspect` : float | None, optional
-            Figure aspect ratio defined as `height / width`.
-            If None, the full available height is used, by default 0.6
+            Figure aspect ratio defined as `height / width`. If None, the full available height is used, by default 0.6
+        `width_scale` : float, optional
+            Fraction of the available line width used for the figure (1.0 = full width), by default 1.0
 
         Returns
         -------
@@ -201,7 +203,7 @@ class AxesUtils:
         if usable_w <= 0 or usable_h <= 0:
             raise ValueError("Margins are larger than paper dimensions.")
 
-        fig_w = usable_w / 2.54
+        fig_w = usable_w / 2.54 * width_scale
         if aspect is None:
             fig_h = usable_h / 2.54
         else:
