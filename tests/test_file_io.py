@@ -29,7 +29,7 @@ class TestJSON:
         data = "not a dict"
         file_path = tmp_path / "test.json"
         with pytest.raises(TypeError, match="Invalid data type: expected dict"):
-            JSON.dump(file_path, data) # type: ignore
+            JSON.dump(file_path, data)  # type: ignore
 
     def test_json_dump_invalid_extension(self, tmp_path):
         data = {"key": "value"}
@@ -50,7 +50,7 @@ class TestTXT:
         data = 123  # Nie str
         file_path = tmp_path / "test.txt"
         with pytest.raises(TypeError, match="Invalid data type: expected str"):
-            TXT.dump(file_path, data) # type: ignore
+            TXT.dump(file_path, data)  # type: ignore
 
     def test_txt_dump_invalid_extension(self, tmp_path):
         data = "text"
