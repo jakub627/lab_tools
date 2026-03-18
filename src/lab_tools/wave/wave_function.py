@@ -28,7 +28,6 @@ class WaveFunction(Generic[T]):
             )
         self._psi: ndarray[tuple[int, ...], dtype[T]] = psi
         self._grid = grid
-        raise NotImplementedError
 
     @property
     def psi(self) -> ndarray[tuple[int, ...], dtype[T]]:
@@ -235,7 +234,6 @@ def wave_function(
 def wave_function(
     arr: ndarray[tuple[int, ...], dtype[float64 | complex128]], grid: Grid
 ) -> WaveFunction[complex128] | WaveFunction[float64]:
-    raise NotImplementedError
     dt: dtype[float64 | complex128 | int64] = arr.dtype
     if dt in (float64, complex128, int64):
         if dt == int64:

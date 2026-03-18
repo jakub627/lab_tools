@@ -169,7 +169,7 @@ class AxesUtils:
         margins: tuple[float, float, float, float] = (3.5, 3.5, 3.5, 3.5),
         paper_dims: tuple[float, float] = (21.0, 29.7),
         aspect: float | None = 0.6,
-        width_scale: float = 1,
+        width_scale: float = 1.0,
     ) -> tuple[float, float]:
         """
         Compute a Matplotlib figure size that fits inside page margins.

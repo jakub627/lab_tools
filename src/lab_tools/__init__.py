@@ -2,6 +2,7 @@ from .config import Formatters, Locators, AxesUtils, Norms, SI, LoggerFactory
 from .curve_fit import CurveFit
 from .file_io import PICKLE, JSON, TXT
 from .linear_regression import LinearRegression
+from .wave import
 
 __all__ = [
     "Formatters",
