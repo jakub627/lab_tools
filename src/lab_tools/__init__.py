@@ -2,6 +2,7 @@ from .config import Formatters, Locators, AxesUtils, Norms, SI, LoggerFactory
 from .curve_fit import CurveFit
 from .file_io import PICKLE, JSON, TXT
 from .linear_regression import LinearRegression
+import wave
 
 __all__ = [
     "Formatters",
@@ -15,4 +16,5 @@ __all__ = [
     "JSON",
     "TXT",
     "LinearRegression",
+    "wave"
 ]
