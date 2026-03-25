@@ -3,6 +3,7 @@ import math
 from matplotlib import pyplot as plt
 from numpy import complex128, dtype, float64, int64, ndarray
 import numpy as np
+from lab_tools.wave.boundary import BoundaryCondition, Dirichlet
 from lab_tools.wave.grid import Grid
 from typing import (
     Literal,
@@ -31,6 +32,8 @@ class WaveFunction(Generic[T]):
 
     @property
     def psi(self) -> ndarray[tuple[int, ...], dtype[T]]:
+        if hasattr(self, "boundary_condition"):
+            self.boundary_condition.apply(self._psi)
         return self._psi
 
     @property
@@ -51,8 +54,10 @@ class WaveFunction(Generic[T]):
 
     @overload
     def normalize(self, inplace: Literal[True]) -> None: ...
+
     @overload
     def normalize(self, inplace: Literal[False] = False) -> "WaveFunction[T]": ...
+
     def normalize(self, inplace: bool = False) -> "WaveFunction[T] | None":
         norm = self.norm
         if norm == 0:
@@ -222,18 +227,34 @@ class WaveFunction(Generic[T]):
         result = arr[tuple(slc)][ax,]
         return result.squeeze()
 
+    def __getitem__(self, key) -> ndarray[tuple[int, ...], dtype[T]]:
+        return self.psi[key]
+
+    @property
+    def shape(self) -> tuple[int, ...]:
+        return self.psi.shape
+
+    def set_boundary_condition(self, condition: BoundaryCondition):
+        self.boundary_condition = condition
+        self.boundary_condition.apply(self._psi)
+
 
 @overload
 def wave_function(
-    arr: ndarray[tuple[int, ...], dtype[float64]], grid: Grid
+    grid: Grid,
+    arr: ndarray[tuple[int, ...], dtype[float64]] | None = None,
 ) -> WaveFunction[float64]: ...
 @overload
 def wave_function(
-    arr: ndarray[tuple[int, ...], dtype[complex128]], grid: Grid
+    grid: Grid,
+    arr: ndarray[tuple[int, ...], dtype[complex128]],
 ) -> WaveFunction[complex128]: ...
 def wave_function(
-    arr: ndarray[tuple[int, ...], dtype[float64 | complex128]], grid: Grid
+    grid: Grid,
+    arr: ndarray[tuple[int, ...], dtype[float64 | complex128]] | None = None,
 ) -> WaveFunction[complex128] | WaveFunction[float64]:
+    if arr is None:
+        arr = np.zeros_like(grid.grid[0], dtype=float64)
     dt: dtype[float64 | complex128 | int64] = arr.dtype
     if dt in (float64, complex128, int64):
         if dt == int64:
@@ -244,7 +265,7 @@ def wave_function(
 
 
 def main():
-    N = (101, 101, 101)
+    N = (11, 11)
     dim = len(N)
 
     grid = Grid((-1,) * dim, (1,) * dim, N=N)
@@ -253,12 +274,15 @@ def main():
     # z = grid.grid[2]
 
     arr: ndarray = x**2 + y**2  # + z**2
-    psi = wave_function(arr, grid)
-    psi.normalize(inplace=True)
-
-    fig, ax = plt.subplots(constrained_layout=True)
-    ax.pcolormesh(psi.get_slice(0), psi.get_slice(1), psi.psi[:, :, 0])
-    plt.show()
+    w = wave_function(
+        grid,
+    )
+    print(w)
+    w.set_boundary_condition(Dirichlet([1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1]))
+    print(w)
+    w.normalize()
+    print(w)
+    print(w.psi)
 
 
 if __name__ == "__main__":
