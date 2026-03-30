@@ -20,3 +20,5 @@ __all__ = [
     "wave",
     "typing",
 ]
+
+__version__ = "1.3.0a7"
