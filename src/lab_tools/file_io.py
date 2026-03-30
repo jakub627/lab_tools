@@ -4,7 +4,7 @@ import pickle
 from typing import Any
 
 
-from .dtypes import FileDescriptorOrPath
+from .typing import FileDescriptorOrPath
 from .validate import Validate
 
 
