@@ -93,7 +93,7 @@ class LinearRegression:
         self.rvalue = np.corrcoef(self.x, self.y)[0, 1]
 
         self.x_fit = np.linspace(self.limits[0], self.limits[1], dtype=float64)
-        self.y_fit = self.slope * self.x + self.intercept
+        self.y_fit = self.slope * self.x_fit + self.intercept
         self.fitted = True
         return self
 
