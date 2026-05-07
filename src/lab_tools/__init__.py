@@ -21,4 +21,4 @@ __all__ = [
     "typing",
 ]
 
-__version__ = "1.3.0a9"
+__version__ = "1.3.0a10"
