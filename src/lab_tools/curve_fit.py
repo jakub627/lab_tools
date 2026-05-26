@@ -110,7 +110,7 @@ class CurveFit:
                 raise NotFittedError()
             self._stderr = np.sqrt(np.diag(self._covariance))
             self.x_fit = np.linspace(self.limits[0], self.limits[1], 100)
-            self.y_fit = self.fun(self.x, *self._params)
+            self.y_fit = self.fun(self.x_fit, *self._params)
             ss_res = np.sum((self.y - self.y_fit) ** 2)
             ss_tot = np.sum((self.y - np.mean(self.y)) ** 2)
             self._r2 = 1 - (ss_res / ss_tot if ss_tot != 0 else 0)
