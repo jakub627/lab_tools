@@ -161,8 +161,8 @@ class AxesUtils:
 
         dx = abs(xmax - xmin)
         dy = abs(ymax - ymin)
-        ax.set_ylim(ymin - margins[0] * dy, ymax + margins[1] * dy)
-        ax.set_xlim(xmin - margins[1] * dx, xmax + margins[1] * dx)
+        ax.set_ylim(ymin - margins[1] * dy, ymax + margins[1] * dy)
+        ax.set_xlim(xmin - margins[0] * dx, xmax + margins[0] * dx)
 
     @staticmethod
     def get_figsize(
